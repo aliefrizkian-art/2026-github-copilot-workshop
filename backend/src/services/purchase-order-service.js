@@ -49,6 +49,7 @@ function validateCreatePayload(payload) {
     return 'lines must contain at least one item';
   }
 
+  const prLineIds = new Set();
   for (let i = 0; i < payload.lines.length; i++) {
     const line = payload.lines[i];
 
@@ -56,15 +57,18 @@ function validateCreatePayload(payload) {
       return `lines[${i}].prLineId is required`;
     }
 
-    if (!line.itemCode || !line.itemName || !line.uom || !line.siteCode) {
-      return `lines[${i}] itemCode, itemName, uom, and siteCode are required`;
+    if (prLineIds.has(line.prLineId)) {
+      return `lines[${i}].prLineId duplicates an earlier line`;
     }
+    prLineIds.add(line.prLineId);
 
-    if (!Number(line.qtyOrdered) || Number(line.qtyOrdered) <= 0) {
+    const qtyOrdered = Number(line.qtyOrdered);
+    if (!Number.isFinite(qtyOrdered) || qtyOrdered <= 0) {
       return `lines[${i}].qtyOrdered must be greater than 0`;
     }
 
-    if (Number(line.unitPrice) < 0) {
+    const unitPrice = Number(line.unitPrice);
+    if (!Number.isFinite(unitPrice) || unitPrice < 0) {
       return `lines[${i}].unitPrice must be greater than or equal to 0`;
     }
   }
@@ -170,13 +174,18 @@ export async function createPurchaseOrder(db, payload) {
   try {
     await client.query('BEGIN');
 
+    const lockedPrLines = new Map();
+    let sourcePrId = null;
+
     // Lock and validate every referenced PR line
     for (let i = 0; i < payload.lines.length; i++) {
       const line = payload.lines[i];
 
       // Lock the PR line row to prevent concurrent over-allocation
       const prLineResult = await client.query(
-        `SELECT pl.id, pl.qty_requested, pl.qty_allocated, pr.status AS pr_status
+        `SELECT pl.id, pl.pr_id, pl.item_code, pl.item_name, pl.uom,
+          pl.site_code, pl.required_date, pl.qty_requested, pl.qty_allocated,
+          pr.status AS pr_status
          FROM pr_lines pl
          JOIN purchase_requisitions pr ON pr.id = pl.pr_id
          WHERE pl.id = $1
@@ -198,6 +207,13 @@ export async function createPurchaseOrder(db, payload) {
         throw err;
       }
 
+      if (sourcePrId && prLine.pr_id !== sourcePrId) {
+        const err = new Error(`lines[${i}]: all PO lines must belong to the same PR`);
+        err.statusCode = 422;
+        throw err;
+      }
+      sourcePrId = prLine.pr_id;
+
       const remaining = Number(prLine.qty_requested) - Number(prLine.qty_allocated);
       if (Number(line.qtyOrdered) > remaining) {
         const err = new Error(
@@ -206,6 +222,8 @@ export async function createPurchaseOrder(db, payload) {
         err.statusCode = 422;
         throw err;
       }
+
+      lockedPrLines.set(line.prLineId, prLine);
     }
 
     // Generate PO number
@@ -223,6 +241,7 @@ export async function createPurchaseOrder(db, payload) {
     // Insert PO lines, allocations, and update pr_lines.qty_allocated
     for (let i = 0; i < payload.lines.length; i++) {
       const line = payload.lines[i];
+      const prLine = lockedPrLines.get(line.prLineId);
       const poLineId = uuidv4();
 
       await client.query(
@@ -234,13 +253,13 @@ export async function createPurchaseOrder(db, payload) {
           poLineId,
           poId,
           i + 1,
-          line.itemCode,
-          line.itemName,
+          prLine.item_code,
+          prLine.item_name,
           Number(line.qtyOrdered),
-          line.uom,
-          Number(line.unitPrice || 0),
-          line.siteCode,
-          line.requiredDate || null,
+          prLine.uom,
+          Number(line.unitPrice),
+          prLine.site_code,
+          prLine.required_date,
         ]
       );
 

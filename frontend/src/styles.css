@@ -322,6 +322,26 @@ td a {
   min-height: 70px;
 }
 
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .navbar-brand {
+    display: none;
+  }
+
+  .navbar nav {
+    gap: 4px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .navbar nav a {
+    padding: 6px 8px;
+  }
+}
+
 /* ===== Status badge ===== */
 .status-badge {
   display: inline-block;
