@@ -16,8 +16,25 @@ module.exports = defineConfig({
 
   outputDir: 'test-results',
 
+  webServer: [
+    {
+      command: 'npm start',
+      cwd: './backend',
+      url: 'http://127.0.0.1:3000/health',
+      reuseExistingServer: !process.env.CI,
+      timeout: 30_000
+    },
+    {
+      command: 'npm run dev -- --host 127.0.0.1',
+      cwd: './frontend',
+      url: 'http://127.0.0.1:5173',
+      reuseExistingServer: !process.env.CI,
+      timeout: 30_000
+    }
+  ],
+
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://127.0.0.1:5173',
     headless: true,
     screenshot: 'on',
     video: 'on',

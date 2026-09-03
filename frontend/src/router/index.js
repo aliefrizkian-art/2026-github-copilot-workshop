@@ -6,6 +6,9 @@ import RequisitionDetailPage from '../pages/RequisitionDetailPage.vue';
 import PurchaseOrderListPage from '../pages/PurchaseOrderListPage.vue';
 import PurchaseOrderCreatePage from '../pages/PurchaseOrderCreatePage.vue';
 import PurchaseOrderDetailPage from '../pages/PurchaseOrderDetailPage.vue';
+import GoodsReceiptListPage from '../pages/GoodsReceiptListPage.vue';
+import GoodsReceiptCreatePage from '../pages/GoodsReceiptCreatePage.vue';
+import GoodsReceiptDetailPage from '../pages/GoodsReceiptDetailPage.vue';
 
 const routes = [
   { path: '/', name: 'dashboard', component: DashboardPage },
@@ -15,6 +18,9 @@ const routes = [
   { path: '/purchase-orders', name: 'purchase-orders-list', component: PurchaseOrderListPage },
   { path: '/purchase-orders/new', name: 'purchase-orders-create', component: PurchaseOrderCreatePage },
   { path: '/purchase-orders/:id', name: 'purchase-orders-detail', component: PurchaseOrderDetailPage, props: true },
+  { path: '/goods-receipts', name: 'goods-receipts-list', component: GoodsReceiptListPage },
+  { path: '/goods-receipts/new', name: 'goods-receipts-create', component: GoodsReceiptCreatePage },
+  { path: '/goods-receipts/:id', name: 'goods-receipts-detail', component: GoodsReceiptDetailPage, props: true },
 ];
 
 const router = createRouter({

@@ -1,0 +1,250 @@
+{
+  "communities": {
+    "0": [
+      "frontend_src_api",
+      "frontend_src_api_api",
+      "frontend_src_api_apifetch",
+      "frontend_src_main",
+      "frontend_src_pages_dashboardpage",
+      "frontend_src_pages_dashboardpage_stats",
+      "frontend_src_pages_requisitiondetailpage",
+      "frontend_src_pages_requisitiondetailpage_approverequisition",
+      "frontend_src_pages_requisitiondetailpage_errormessage",
+      "frontend_src_pages_requisitiondetailpage_load",
+      "frontend_src_pages_requisitiondetailpage_requisition",
+      "frontend_src_pages_requisitiondetailpage_route",
+      "frontend_src_pages_requisitiondetailpage_submitrequisition",
+      "frontend_src_pages_requisitionlistpage",
+      "frontend_src_pages_requisitionlistpage_errormessage",
+      "frontend_src_pages_requisitionlistpage_items",
+      "frontend_src_router_index",
+      "frontend_src_router_index_router",
+      "frontend_src_router_index_routes"
+    ],
+    "1": [
+      "backend_src_routes_purchase_order_routes",
+      "backend_src_routes_purchase_order_routes_purchaseorderroutes",
+      "backend_src_services_purchase_order_service",
+      "backend_src_services_purchase_order_service_createponumber",
+      "backend_src_services_purchase_order_service_createpurchaseorder",
+      "backend_src_services_purchase_order_service_getopenpolines",
+      "backend_src_services_purchase_order_service_getpurchaseorderbyid",
+      "backend_src_services_purchase_order_service_listpurchaseorders",
+      "backend_src_services_purchase_order_service_mapheader",
+      "backend_src_services_purchase_order_service_mapline",
+      "backend_src_services_purchase_order_service_submitpurchaseorder",
+      "backend_src_services_purchase_order_service_validatecreatepayload",
+      "backend_tests_services_purchase_order_service_test",
+      "backend_tests_services_purchase_order_service_test_detailqueryresponses",
+      "backend_tests_services_purchase_order_service_test_happypathclientresponses",
+      "backend_tests_services_purchase_order_service_test_mockclient",
+      "backend_tests_services_purchase_order_service_test_mockdb",
+      "backend_tests_services_purchase_order_service_test_validpayload"
+    ],
+    "2": [
+      "backend_src_routes_requisition_routes",
+      "backend_src_routes_requisition_routes_requisitionroutes",
+      "backend_src_services_requisition_service",
+      "backend_src_services_requisition_service_approverequisition",
+      "backend_src_services_requisition_service_createprnumber",
+      "backend_src_services_requisition_service_createrequisition",
+      "backend_src_services_requisition_service_getrequisitionbyid",
+      "backend_src_services_requisition_service_getrequisitionopenlines",
+      "backend_src_services_requisition_service_listrequisitions",
+      "backend_src_services_requisition_service_mapheader",
+      "backend_src_services_requisition_service_mapline",
+      "backend_src_services_requisition_service_submitrequisition",
+      "backend_src_services_requisition_service_validatecreatepayload",
+      "backend_tests_services_requisition_service_test",
+      "backend_tests_services_requisition_service_test_mockdb"
+    ],
+    "3": [
+      "backend_src_app",
+      "backend_src_app_buildapp",
+      "backend_src_config",
+      "backend_src_config_config",
+      "backend_src_plugins_db",
+      "backend_src_plugins_db_dbplugin",
+      "backend_src_server",
+      "backend_src_server_start"
+    ],
+    "4": [
+      "frontend_src_pages_requisitioncreatepage",
+      "frontend_src_pages_requisitioncreatepage_addline",
+      "frontend_src_pages_requisitioncreatepage_emptyline",
+      "frontend_src_pages_requisitioncreatepage_errormessage",
+      "frontend_src_pages_requisitioncreatepage_form",
+      "frontend_src_pages_requisitioncreatepage_handlesubmit",
+      "frontend_src_pages_requisitioncreatepage_removeline",
+      "frontend_src_pages_requisitioncreatepage_router"
+    ],
+    "5": [
+      "frontend_src_app",
+      "frontend_src_app_isdashboard",
+      "frontend_src_app_isrequisitions",
+      "frontend_src_app_route"
+    ],
+    "6": [
+      "docker_postgres_init_00_init_mvp_db",
+      "docker_postgres_init_00_init_mvp_db_sh__entry"
+    ],
+    "7": [
+      "playwright_config",
+      "playwright_config_defineconfig"
+    ],
+    "8": [
+      "backend_jest_config"
+    ],
+    "9": [
+      "frontend_vite_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.14035087719298245,
+    "1": 0.2549019607843137,
+    "2": 0.3523809523809524,
+    "3": 0.4642857142857143,
+    "4": 0.2857142857142857,
+    "5": 0.5,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0
+  },
+  "gods": [
+    {
+      "id": "backend_src_routes_requisition_routes_requisitionroutes",
+      "label": "requisitionRoutes()",
+      "degree": 9
+    },
+    {
+      "id": "backend_src_routes_purchase_order_routes_purchaseorderroutes",
+      "label": "purchaseOrderRoutes()",
+      "degree": 8
+    },
+    {
+      "id": "backend_src_services_requisition_service_getrequisitionbyid",
+      "label": "getRequisitionById()",
+      "degree": 8
+    },
+    {
+      "id": "backend_src_services_purchase_order_service_createpurchaseorder",
+      "label": "createPurchaseOrder()",
+      "degree": 7
+    },
+    {
+      "id": "backend_src_services_purchase_order_service_getpurchaseorderbyid",
+      "label": "getPurchaseOrderById()",
+      "degree": 7
+    },
+    {
+      "id": "backend_src_services_requisition_service_createrequisition",
+      "label": "createRequisition()",
+      "degree": 6
+    },
+    {
+      "id": "backend_src_app_buildapp",
+      "label": "buildApp()",
+      "degree": 6
+    },
+    {
+      "id": "backend_src_services_purchase_order_service_getopenpolines",
+      "label": "getOpenPoLines()",
+      "degree": 5
+    },
+    {
+      "id": "backend_src_services_purchase_order_service_listpurchaseorders",
+      "label": "listPurchaseOrders()",
+      "degree": 5
+    },
+    {
+      "id": "backend_src_services_purchase_order_service_submitpurchaseorder",
+      "label": "submitPurchaseOrder()",
+      "degree": 5
+    }
+  ],
+  "surprises": [
+    {
+      "source": "buildApp()",
+      "target": "purchaseOrderRoutes()",
+      "source_files": [
+        "backend/src/app.js",
+        "backend/src/routes/purchase-order-routes.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "buildApp()",
+      "target": "requisitionRoutes()",
+      "source_files": [
+        "backend/src/app.js",
+        "backend/src/routes/requisition-routes.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "buildApp()",
+      "target": "dbPlugin()",
+      "source_files": [
+        "backend/src/app.js",
+        "backend/src/plugins/db.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `dbPlugin()` unexpectedly reaches hub `buildApp()`"
+    },
+    {
+      "source": "start()",
+      "target": "buildApp()",
+      "source_files": [
+        "backend/src/server.js",
+        "backend/src/app.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "peripheral node `start()` unexpectedly reaches hub `buildApp()`"
+    },
+    {
+      "source": "purchaseOrderRoutes()",
+      "target": "createPurchaseOrder()",
+      "source_files": [
+        "backend/src/routes/purchase-order-routes.js",
+        "backend/src/services/purchase-order-service.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `purchaseOrderRoutes()` connect `purchase-order-service.js` to `app.js`?",
+      "why": "High betweenness centrality (0.071) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `requisitionRoutes()` connect `requisition-service.js` to `app.js`?",
+      "why": "High betweenness centrality (0.064) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `buildApp()` connect `app.js` to `purchase-order-service.js`, `requisition-service.js`?",
+      "why": "High betweenness centrality (0.043) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `stats`, `errorMessage`, `requisition` to the rest of the system?",
+      "why": "15 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `RequisitionDetailPage.vue` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.14035087719298245 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
