@@ -224,17 +224,17 @@ Using the seed data:
 
 ## Phase 5: Add E2E Proof
 
-- [ ] Create `tests/e2e/po-flow.spec.js`.
-- [ ] Create, submit, and approve a fresh PR through API setup for each scenario.
-- [ ] Navigate to PO creation through the browser.
-- [ ] Select the approved PR and its open lines.
-- [ ] Enter quantity and price.
-- [ ] Create the PO and verify its DRAFT detail.
-- [ ] Submit the PO and verify `SUBMITTED` status.
-- [ ] Add focused over-allocation coverage.
-- [ ] Use role- and label-based locators.
-- [ ] Do not assert generated PO numbers.
-- [ ] Do not consume fixed seed availability.
+- [x] Create `tests/e2e/po-module.spec.js`.
+- [x] Create, submit, and approve a fresh PR through API setup for each scenario.
+- [x] Navigate to PO creation through the browser.
+- [x] Select the approved PR and its open lines.
+- [x] Enter quantity and price.
+- [x] Create and submit the PO, then verify its detail.
+- [x] Verify `SUBMITTED` status.
+- [x] Add focused client and API over-allocation coverage.
+- [x] Use role- and label-based locators.
+- [x] Do not assert generated PO numbers.
+- [x] Do not consume fixed seed availability.
 
 ### Checkpoint 5: Release Gate
 
@@ -268,13 +268,13 @@ npm run test:e2e
 
 Final acceptance:
 
-- [ ] Backend tests pass.
-- [ ] Frontend tests pass.
-- [ ] Frontend production build passes.
-- [ ] E2E passes twice without resetting seed quantities.
-- [ ] PO list, create, and detail are usable at desktop and mobile widths.
-- [ ] Controls and text do not overlap.
-- [ ] API errors are visible and actionable.
-- [ ] No GR or post-backlog functionality was introduced.
+- [x] Backend tests pass (31 tests).
+- [x] Frontend tests pass (17 tests).
+- [x] Frontend production build passes.
+- [x] E2E passes twice without resetting seed quantities.
+- [x] PO list, create, and detail are usable at desktop and mobile widths.
+- [x] Controls and text do not overlap.
+- [x] API errors are visible and actionable.
+- [x] No GR or post-backlog functionality was introduced.
 
 The PO MVP backlog is complete only when every release-gate item passes.

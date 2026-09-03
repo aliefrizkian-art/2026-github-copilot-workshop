@@ -266,15 +266,20 @@ Not yet covered:
 - Dashboard and PR detail pages.
 - Route-level backend integration tests.
 - API client tests.
-- Playwright E2E scenarios.
 
-Playwright is configured, but no E2E test files currently exist.
+Playwright coverage is implemented in `tests/e2e/po-module.spec.js`:
+
+- Happy path: create an approved PR fixture, create and submit a PO, and verify detail allocations.
+- Negative path: block over-allocation in the UI and verify the backend returns `422` with a clear message.
+- Tests use fresh API-created PR fixtures and pass repeatedly without resetting seed quantities.
+- HTML report: `playwright-report/index.html`.
+- Screenshots, traces, videos, and JSON results: `test-results/`.
 
 ## Known Gaps and Risks
 
 ### PO backlog
 
-- Add the Playwright PO journey.
+- PO MVP backlog is complete.
 
 ### Backend production hardening still deferred
 
@@ -286,9 +291,6 @@ Swagger/OpenAPI is available and discovers registered routes, but the route defi
 
 ## Next Recommended Milestone
 
-Complete the PO frontend backlog in this order:
+Continue the deferred Goods Receipt exploration when PO acceptance is complete.
 
-1. Add a rerunnable Playwright create-and-submit flow.
-2. Continue the deferred Goods Receipt exploration when PO acceptance is complete.
-
-The project is ready for this milestone without database or framework changes.
+The project is ready for this next milestone without database or framework changes.

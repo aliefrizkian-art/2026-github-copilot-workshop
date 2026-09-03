@@ -51,6 +51,7 @@
                 v-model.number="line.orderQty"
                 class="cell-input quantity-input"
                 :class="{ invalid: line.error }"
+                :aria-label="`Order quantity for ${line.itemCode}`"
                 :disabled="!line.selected"
                 min="0.01"
                 :max="line.remainingQty"
@@ -61,7 +62,17 @@
             </td>
             <td><input v-model="line.deliveryAddress" class="cell-input address-input" placeholder="Type..." disabled /></td>
             <td><input v-model="line.deliveryDate" class="cell-input date-input" type="date" disabled /></td>
-            <td><input v-model.number="line.unitPrice" class="cell-input price-input" :disabled="!line.selected" min="0" step="0.01" type="number" /></td>
+            <td>
+              <input
+                v-model.number="line.unitPrice"
+                class="cell-input price-input"
+                :aria-label="`Unit price for ${line.itemCode}`"
+                :disabled="!line.selected"
+                min="0"
+                step="0.01"
+                type="number"
+              />
+            </td>
             <td>{{ formatAmount(line.orderQty * line.unitPrice) }}</td>
           </tr>
         </tbody>
