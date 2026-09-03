@@ -18,12 +18,8 @@ function validPayload(overrides = {}) {
     lines: [
       {
         prLineId: 'pr-line-001',
-        itemCode: 'BRG-001',
-        itemName: 'Safety Helmet',
         qtyOrdered: 5,
         unitPrice: 150000,
-        uom: 'PCS',
-        siteCode: 'WH-JKT',
       },
     ],
     ...overrides,
@@ -65,7 +61,12 @@ function happyPathClientResponses() {
     // PR line lock check
     if (sql.includes('FOR UPDATE')) {
       return {
-        rows: [{ id: 'pr-line-001', qty_requested: 10, qty_allocated: 0, pr_status: 'APPROVED' }],
+        rows: [{
+          id: 'pr-line-001', pr_id: 'pr-001', item_code: 'BRG-001',
+          item_name: 'Safety Helmet', uom: 'PCS', site_code: 'WH-JKT',
+          required_date: null, qty_requested: 10, qty_allocated: 0,
+          pr_status: 'APPROVED',
+        }],
         rowCount: 1,
       };
     }
@@ -159,14 +160,14 @@ describe('createPurchaseOrder – payload validation', () => {
       .rejects.toMatchObject({ message: 'lines[0].prLineId is required', statusCode: 422 });
   });
 
-  test('rejects when required line fields are missing', async () => {
+  test('rejects duplicate PR lines', async () => {
     const db = mockDb(null);
     const payload = validPayload({
-      lines: [{ prLineId: 'pr-1', qtyOrdered: 1, unitPrice: 0 }],
+      lines: [validPayload().lines[0], validPayload().lines[0]],
     });
     await expect(createPurchaseOrder(db, payload))
       .rejects.toMatchObject({
-        message: 'lines[0] itemCode, itemName, uom, and siteCode are required',
+        message: 'lines[1].prLineId duplicates an earlier line',
         statusCode: 422,
       });
   });
@@ -194,6 +195,19 @@ describe('createPurchaseOrder – payload validation', () => {
     await expect(createPurchaseOrder(db, payload))
       .rejects.toMatchObject({
         message: 'lines[0].unitPrice must be greater than or equal to 0',
+        statusCode: 422,
+      });
+  });
+
+  test('rejects non-finite numeric values', async () => {
+    const db = mockDb(null);
+    const payload = validPayload({
+      lines: [{ prLineId: 'pr-1', qtyOrdered: Infinity, unitPrice: NaN }],
+    });
+
+    await expect(createPurchaseOrder(db, payload))
+      .rejects.toMatchObject({
+        message: 'lines[0].qtyOrdered must be greater than 0',
         statusCode: 422,
       });
   });
@@ -318,6 +332,38 @@ describe('createPurchaseOrder – PR status check', () => {
   });
 });
 
+describe('createPurchaseOrder – source PR rule', () => {
+  test('rejects lines from different PRs', async () => {
+    const client = mockClient((sql, params) => {
+      if (sql === 'BEGIN' || sql === 'ROLLBACK') return { rows: [], rowCount: 0 };
+      if (sql.includes('FOR UPDATE')) {
+        return {
+          rows: [{
+            id: params[0], pr_id: params[0] === 'line-1' ? 'pr-1' : 'pr-2',
+            qty_requested: 10, qty_allocated: 0, pr_status: 'APPROVED',
+          }],
+          rowCount: 1,
+        };
+      }
+      return { rows: [], rowCount: 0 };
+    });
+    const db = mockDb(client);
+    const payload = validPayload({
+      lines: [
+        { prLineId: 'line-1', qtyOrdered: 1, unitPrice: 100 },
+        { prLineId: 'line-2', qtyOrdered: 1, unitPrice: 100 },
+      ],
+    });
+
+    await expect(createPurchaseOrder(db, payload))
+      .rejects.toMatchObject({
+        message: 'lines[1]: all PO lines must belong to the same PR',
+        statusCode: 422,
+      });
+    expect(client.query).toHaveBeenCalledWith('ROLLBACK');
+  });
+});
+
 // ─────────────────────────────────────────────────────────
 // Successful PO Creation
 // ─────────────────────────────────────────────────────────
@@ -337,6 +383,18 @@ describe('createPurchaseOrder – success path', () => {
     expect(result.lines[0].qtyOrdered).toBe(5);
     expect(result.lines[0].allocations).toHaveLength(1);
     expect(client.query).toHaveBeenCalledWith('COMMIT');
+  });
+
+  test('copies item metadata from the locked PR line', async () => {
+    const client = mockClient(happyPathClientResponses());
+    const db = mockDb(client, detailQueryResponses());
+
+    await createPurchaseOrder(db, validPayload());
+
+    const lineInsert = client.query.mock.calls.find(([sql]) => sql.includes('INSERT INTO po_lines'));
+    expect(lineInsert[1].slice(3, 10)).toEqual([
+      'BRG-001', 'Safety Helmet', 5, 'PCS', 150000, 'WH-JKT', null,
+    ]);
   });
 
   test('rolls back and releases client on unexpected error', async () => {
@@ -439,6 +497,14 @@ describe('submitPurchaseOrder – status transition', () => {
 });
 
 describe('purchase-order-service list functions', () => {
+  test('listPurchaseOrders returns an empty list when no records exist', async () => {
+    const db = { query: jest.fn(() => ({ rows: [] })) };
+
+    const result = await listPurchaseOrders(db);
+
+    expect(result).toEqual([]);
+  });
+
   test('listPurchaseOrders returns mapped header fields', async () => {
     const db = {
       query: jest.fn(() => ({

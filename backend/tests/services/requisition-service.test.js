@@ -9,6 +9,14 @@ function mockDb(queryImpl) {
 }
 
 describe('requisition-service list functions', () => {
+  test('listRequisitions returns an empty list when no records exist', async () => {
+    const db = mockDb(() => ({ rows: [] }));
+
+    const result = await listRequisitions(db);
+
+    expect(result).toEqual([]);
+  });
+
   test('listRequisitions returns mapped header fields', async () => {
     const db = mockDb(() => ({
       rows: [
